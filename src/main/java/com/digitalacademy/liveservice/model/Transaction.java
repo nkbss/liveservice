@@ -14,6 +14,7 @@ import java.sql.Timestamp;
 @Data
 @Entity
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Table(name = "transaction")
 public class Transaction {
 
     @Id
