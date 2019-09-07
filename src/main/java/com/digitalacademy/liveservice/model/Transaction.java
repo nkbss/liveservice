@@ -41,6 +41,9 @@ public class Transaction {
     @Column(name="total_price")
     private int totalPrice;
 
+    @Column(name="reference_code")
+    private String referenceCode;
+
     @NotNull
     @Size(min = 1, max = 250 , message = "Please enter your address")
     private String address;
