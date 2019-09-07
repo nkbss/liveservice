@@ -1,0 +1,17 @@
+server:
+  port: 8089
+  servlet:
+    contextPath: /api
+
+spring:
+  application:
+    name: live-service
+
+  jpa:
+    hibernate:
+#      ddl-auto: create
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/db_liveservice
+    username: liveservice
+    password: password
