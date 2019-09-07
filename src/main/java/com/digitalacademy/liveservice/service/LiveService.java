@@ -1,8 +1,10 @@
 package com.digitalacademy.liveservice.service;
 
+import com.digitalacademy.liveservice.model.Customer;
 import com.digitalacademy.liveservice.model.Live;
 import com.digitalacademy.liveservice.model.LiveStock;
 import com.digitalacademy.liveservice.model.Stock;
+import com.digitalacademy.liveservice.repositories.CustomerRepository;
 import com.digitalacademy.liveservice.repositories.LiveRepository;
 import com.digitalacademy.liveservice.repositories.LiveStockRepository;
 import com.digitalacademy.liveservice.repositories.StockRepository;
@@ -18,19 +20,34 @@ public class LiveService {
     private StockRepository stockRepository;
     private LiveRepository liveRepository;
     private LiveStockRepository liveStockRepository;
+    private CustomerRepository customerRepository;
 
 
     @Autowired
-    public LiveService(StockRepository stockRepository,LiveRepository liveRepository,LiveStockRepository liveStockRepository){
+    public LiveService(StockRepository stockRepository,LiveRepository liveRepository,LiveStockRepository liveStockRepository,CustomerRepository customerRepository){
         this.stockRepository = stockRepository;
         this.liveRepository = liveRepository;
         this.liveStockRepository = liveStockRepository;
+        this.customerRepository = customerRepository;
     }
 
     public Stock createStock(Stock body,String userId){
         body.setUserId(userId);
         stockRepository.save(body);
         return body;
+    }
+
+    public Customer createCustomer(Customer body,String customerId){
+        body.setCustomerId(customerId);
+        String bankAccount = "xxx-xxx" + new Random().nextInt(999) + "-" + new Random().nextInt(9);
+        body.setBankAccount(bankAccount);
+        customerRepository.save(body);
+        return body;
+    }
+
+    public List<Customer> getCustomer(String customerId){
+        List <Customer> customers = customerRepository.getCustomer(customerId);
+        return customers;
     }
 
     public List<Stock> getAllStockByUserId(String userId){
@@ -55,11 +72,13 @@ public class LiveService {
     public LiveStock generateDeepLink (LiveStock liveStock, String userId){
         int stockRandom = new Random().nextInt(9999)+10000;
         String deepLink = "SCB_LIVE/" + liveStock.getLiveId()+"/"+stockRandom;
+
         Stock stock = new Stock();
         stock.setStockId(stockRandom);
         stock.setUserId(userId);
         stock.setName(liveStock.getStockName());
         stock.setInStock(liveStock.getInStock());
+        stock.setPrice(liveStock.getPrice());
         liveStock.setStockId(stockRandom);
         liveStock.setDeepLink(deepLink);
         liveStock.setCloseDeal(0);
@@ -81,6 +100,7 @@ public class LiveService {
         live.setCloseDeal(1);
         liveRepository.save(live);
         System.err.println(live);
+
         for(int i =0;i<liveStocks.size();i++){
             LiveStock liveStockBody = liveStocks.get(i);
             liveStockBody.setCloseDeal(1);

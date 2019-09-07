@@ -36,6 +36,9 @@ public class LiveStock {
     @Column(name="in_stock")
     private int inStock;
 
+    @Column(name="price")
+    private int price;
+
     @Column(name="deep_link")
     private String deepLink;
 

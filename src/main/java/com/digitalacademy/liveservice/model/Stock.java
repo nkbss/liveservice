@@ -33,6 +33,9 @@ public class Stock {
     @Size(min = 1, max = 100, message = "Please type your name")
     private String name;
 
+    @Column(name="price")
+    private int price;
+
     @NotNull
     @Column(name="in_stock")
     private int inStock;
