@@ -53,10 +53,10 @@ public class LiveController {
     }
 
     @GetMapping("/stock/getStockByStockId")
-    public ResponseEntity<?> getStockByStockId (@RequestParam int stockId){
-        Stock stock = liveService.getStockByStockId(stockId);
+    public ResponseEntity<?> getStockByStockId (@RequestParam String userId,@RequestParam int stockId){
+        Stock stock = liveService.getStockByStockId(userId,stockId);
         ResponseModel response = new ResponseModel(new StatusModel(LiveResponse.SUCCESS.getCode()+"",
-                LiveResponse.SUCCESS.getMessage()));
+                LiveResponse.SUCCESS.getMessage()),stock);
         return ResponseEntity.ok(response);
     }
 

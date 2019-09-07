@@ -38,8 +38,8 @@ public class LiveService {
         return stocks;
     }
 
-    public Stock getStockByStockId(int stockId){
-        Stock stock = stockRepository.findById(stockId);
+    public Stock getStockByStockId(String userId,int stockId){
+        Stock stock = stockRepository.getStockByStockId(userId,stockId);
         return stock;
     }
 
