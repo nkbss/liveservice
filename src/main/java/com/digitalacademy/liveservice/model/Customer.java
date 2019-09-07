@@ -13,14 +13,17 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name="user_id")
-    private int userId;
+    @Column(name="customer_id")
+    private String customerId;
 
     @Column(name = "first_name")
     private String firstName;
 
     @Column(name = "last_name")
     private String lastName;
+
+    @Column(name="bank_account")
+    private String bankAccount;
 
     @Column(name="address")
     private String address;

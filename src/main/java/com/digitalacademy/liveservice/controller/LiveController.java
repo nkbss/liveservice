@@ -32,6 +32,22 @@ public class LiveController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @PostMapping("/customer/create")
+    public ResponseEntity<?> createCustomer(@Valid @RequestBody Customer body,@RequestParam String customerId){
+        Customer customer = liveService.createCustomer(body, customerId);
+        ResponseModel response = new ResponseModel(new StatusModel(LiveResponse.CREATED.getCode()+"",
+                LiveResponse.CREATED.getMessage()),customer);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping("/customer/getCustomer")
+    public ResponseEntity<?> getCustomer(@RequestParam String customerId){
+        List <Customer> customers = liveService.getCustomer(customerId);
+        ResponseModel response = new ResponseModel(new StatusModel(LiveResponse.CREATED.getCode()+"",
+                LiveResponse.CREATED.getMessage()),customers);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
     @PostMapping("/create")
     public ResponseEntity<?> createLive(@Valid @RequestBody Live body, @RequestParam String userId ) throws JSONException{
         Live live = liveService.createLive(body,userId);
