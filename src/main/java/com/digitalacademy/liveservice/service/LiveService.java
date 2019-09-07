@@ -1,13 +1,7 @@
 package com.digitalacademy.liveservice.service;
 
-import com.digitalacademy.liveservice.model.Customer;
-import com.digitalacademy.liveservice.model.Live;
-import com.digitalacademy.liveservice.model.LiveStock;
-import com.digitalacademy.liveservice.model.Stock;
-import com.digitalacademy.liveservice.repositories.CustomerRepository;
-import com.digitalacademy.liveservice.repositories.LiveRepository;
-import com.digitalacademy.liveservice.repositories.LiveStockRepository;
-import com.digitalacademy.liveservice.repositories.StockRepository;
+import com.digitalacademy.liveservice.model.*;
+import com.digitalacademy.liveservice.repositories.*;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +15,10 @@ public class LiveService {
     private LiveRepository liveRepository;
     private LiveStockRepository liveStockRepository;
     private CustomerRepository customerRepository;
+
+    @Autowired
+    private TransactionRepository transactionRepository;
+
 
 
     @Autowired
@@ -109,6 +107,25 @@ public class LiveService {
             System.err.println(liveStockBody);
         }
 
+    }
+
+    public TransactionResponse getAllTransaction() {
+        TransactionResponse response = new TransactionResponse();
+        List<Transaction> transaction = transactionRepository.findAll();
+        Integer totalPrice = transactionRepository.getTotalPrice();
+        response.setTransactionList(transaction);
+        response.setTotalPrice(totalPrice);
+        return response;
+    }
+
+    // after click on deeplink
+    public CustomerPayResponse getDeeplinkData(String liveId, int stockId) {
+        CustomerPayResponse customerPayResponse = new CustomerPayResponse();
+        LiveStock liveStocks = liveStockRepository.findByLiveId(liveId);
+        Stock stock = stockRepository.findByStockId(stockId);
+        customerPayResponse.setLiveStock(liveStocks);
+        customerPayResponse.setStock(stock);
+        return customerPayResponse;
     }
 
 

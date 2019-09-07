@@ -2,6 +2,7 @@ package com.digitalacademy.liveservice.controller;
 
 import com.digitalacademy.liveservice.constants.LiveResponse;
 import com.digitalacademy.liveservice.model.*;
+import com.digitalacademy.liveservice.repositories.TransactionRepository;
 import com.digitalacademy.liveservice.service.LiveService;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -100,5 +101,20 @@ public class LiveController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/getTransaction")
+    public ResponseEntity<?> getTransaction() {
+        TransactionResponse transactions = liveService.getAllTransaction();
+        ResponseModel response = new ResponseModel(new StatusModel(LiveResponse.SUCCESS.getCode()+"",
+                LiveResponse.SUCCESS.getMessage()), transactions);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/getDeeplinkData")
+    public ResponseEntity<?> deeplinkData(@RequestParam String liveId, @RequestParam int stockId) {
+        CustomerPayResponse customerPayResponse = liveService.getDeeplinkData(liveId, stockId);
+        ResponseModel response = new ResponseModel(new StatusModel(LiveResponse.SUCCESS.getCode()+"",
+                LiveResponse.SUCCESS.getMessage()), customerPayResponse);
+        return ResponseEntity.ok(response);
+    }
 
 }
