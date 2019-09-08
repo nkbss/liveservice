@@ -2,6 +2,7 @@ package com.digitalacademy.liveservice.service;
 
 import com.digitalacademy.liveservice.model.*;
 import com.digitalacademy.liveservice.repositories.*;
+import com.pusher.rest.Pusher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -122,11 +123,16 @@ public class LiveService {
     }
 
     public TransactionResponse getAllTransaction(String liveId) {
+//        Pusher pusher = new Pusher("857143", "c6ac9d5d09a6c242dfb8", "4476c85dac300ca54799");
+//        pusher.setCluster("ap1");
+//        pusher.setEncrypted(true);
+
         TransactionResponse response = new TransactionResponse();
         List<Transaction> transactions = transactionRepository.getTransactionByLiveId(liveId);
         Integer totalPrice = transactionRepository.getTotalPrice(liveId);
         response.setTransactionList(transactions);
         response.setTotalPrice(totalPrice);
+//        pusher.trigger("my-channel", "my-event",response);
         return response;
     }
 
@@ -142,6 +148,9 @@ public class LiveService {
 
 
     public Transaction saveTransaction(Transaction body) {
+        Pusher pusher = new Pusher("857143", "c6ac9d5d09a6c242dfb8", "4476c85dac300ca54799");
+        pusher.setCluster("ap1");
+        pusher.setEncrypted(true);
         int qtyProd = body.getQtyProd();
         Stock stock = stockRepository.findByStockId(body.getStockId());
         stock.setInStock(stock.getInStock()-qtyProd);
@@ -150,6 +159,7 @@ public class LiveService {
         LiveStock liveStock = liveStockRepository.findByLiveId(body.getLiveId());
         liveStock.setInStock(liveStock.getInStock()-qtyProd);
         liveStockRepository.save(liveStock);
+        body.setStockName(stock.getName());
         body.setFirstName(customer.getFirstName());
         body.setLastName(customer.getLastName());
         body.setAddress(customer.getAddress());
@@ -164,6 +174,8 @@ public class LiveService {
         referenceCode = referenceCode + random;
         body.setReferenceCode(referenceCode);
         transactionRepository.save(body);
+        this.getAllTransaction(body.getLiveId());
+        pusher.trigger("my-channel", "my-event",body);
         return body;
     }
 
