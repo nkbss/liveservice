@@ -34,7 +34,7 @@ public class Stock {
     private String name;
 
     @Column(name="price")
-    private int price;
+    private double price;
 
     @NotNull
     @Column(name="in_stock")

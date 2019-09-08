@@ -22,28 +22,35 @@ public class Transaction {
     @Column(name="transaction_id")
     private int transactionId;
 
-    @NotNull
-    @Size(min = 1, max = 100, message = "Please type your first name")
+    @Column(name="customer_id")
+    private String customerId;
+
+    @Column(name="stock_id")
+    private int stockId;
+
+    @Column(name="stock_name")
+    private String stockName;
+
+    @Column(name="live_id")
+    private String liveId;
+
     @Column(name="first_name")
     private String firstName;
 
-    @NotNull
-    @Size(min = 1, max = 100, message = "Please type your last name")
     @Column(name="last_name")
     private String lastName;
 
     @NotNull
-    @Column(name="number_product")
-    private int numberProd;
+    @Column(name="quantity_product")
+    private int qtyProd;
 
     @NotNull
     @Column(name="total_price")
-    private int totalPrice;
+    private double totalPrice;
 
     @Column(name="reference_code")
     private String referenceCode;
 
-    @NotNull
     @Size(min = 1, max = 250 , message = "Please enter your address")
     private String address;
 

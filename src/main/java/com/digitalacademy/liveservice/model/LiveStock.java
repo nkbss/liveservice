@@ -37,7 +37,7 @@ public class LiveStock {
     private int inStock;
 
     @Column(name="price")
-    private int price;
+    private double price;
 
     @Column(name="deep_link")
     private String deepLink;

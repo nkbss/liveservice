@@ -106,8 +106,8 @@ public class LiveController {
     }
 
     @GetMapping("/getTransaction")
-    public ResponseEntity<?> getTransaction() {
-        TransactionResponse transactions = liveService.getAllTransaction();
+    public ResponseEntity<?> getTransaction(@RequestParam String liveId) {
+        TransactionResponse transactions = liveService.getAllTransaction(liveId);
         ResponseModel response = new ResponseModel(new StatusModel(LiveResponse.SUCCESS.getCode()+"",
                 LiveResponse.SUCCESS.getMessage()), transactions);
         return ResponseEntity.ok(response);
@@ -121,11 +121,11 @@ public class LiveController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/customerPay")
-    public ResponseEntity<?> customerPay(@RequestParam String liveId, @RequestBody CustomerPayReq customerPayReq) {
-        Transaction transaction = liveService.saveTransaction(customerPayReq, liveId);
+    @PostMapping("/easyPay")
+    public ResponseEntity<?> easyPay(@RequestBody  Transaction body) {
+        Transaction transaction = liveService.saveTransaction(body);
         ResponseModel response = new ResponseModel(new StatusModel(LiveResponse.SUCCESS.getCode()+"",
-                LiveResponse.SUCCESS.getMessage()));
+                LiveResponse.SUCCESS.getMessage()),transaction);
         return ResponseEntity.ok(response);
     }
 

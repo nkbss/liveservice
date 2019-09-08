@@ -5,6 +5,8 @@ import com.digitalacademy.liveservice.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -14,6 +16,8 @@ public class LiveService {
     private LiveRepository liveRepository;
     private LiveStockRepository liveStockRepository;
     private CustomerRepository customerRepository;
+    private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
 
     @Autowired
     private TransactionRepository transactionRepository;
@@ -21,11 +25,12 @@ public class LiveService {
 
 
     @Autowired
-    public LiveService(StockRepository stockRepository,LiveRepository liveRepository,LiveStockRepository liveStockRepository,CustomerRepository customerRepository){
+    public LiveService(StockRepository stockRepository,LiveRepository liveRepository,LiveStockRepository liveStockRepository,CustomerRepository customerRepository,TransactionRepository transactionRepository){
         this.stockRepository = stockRepository;
         this.liveRepository = liveRepository;
         this.liveStockRepository = liveStockRepository;
         this.customerRepository = customerRepository;
+        this.transactionRepository = transactionRepository;
     }
 
     public Stock createStock(Stock body,String userId){
@@ -116,11 +121,11 @@ public class LiveService {
 
     }
 
-    public TransactionResponse getAllTransaction() {
+    public TransactionResponse getAllTransaction(String liveId) {
         TransactionResponse response = new TransactionResponse();
-        List<Transaction> transaction = transactionRepository.findAll();
-        Integer totalPrice = transactionRepository.getTotalPrice();
-        response.setTransactionList(transaction);
+        List<Transaction> transactions = transactionRepository.getTransactionByLiveId(liveId);
+        Integer totalPrice = transactionRepository.getTotalPrice(liveId);
+        response.setTransactionList(transactions);
         response.setTotalPrice(totalPrice);
         return response;
     }
@@ -130,27 +135,46 @@ public class LiveService {
     public DeeplinkDataResponse getDeeplinkData(String liveId) {
         DeeplinkDataResponse deeplinkDataResponse = new DeeplinkDataResponse();
         LiveStock liveStocksId = liveStockRepository.findByLiveId(liveId);
-        List<Stock> stock = stockRepository.findByStockId(liveStocksId.getStockId());
+        Stock stock = stockRepository.findByStockId(liveStocksId.getStockId());
         deeplinkDataResponse.setStock(stock);
         return deeplinkDataResponse;
     }
 
-    public Transaction saveTransaction(CustomerPayReq req, String liveId) {
-        LiveStock liveStocksId = liveStockRepository.findByLiveId(liveId);
-        List<Stock> stock = stockRepository.findByStockId(liveStocksId.getStockId());
-        Customer customerData = customerRepository.findById(1);
 
-        int sumPrice = stock.stream().filter(o -> o.getPrice() >= 0).mapToInt(Stock::getPrice).sum();
-
-        Transaction saveToTransaction = new Transaction();
-        saveToTransaction.setAddress(customerData.getAddress());
-        saveToTransaction.setFirstName(customerData.getFirstName());
-        saveToTransaction.setLastName(customerData.getLastName());
-        saveToTransaction.setNumberProd(req.getNumberOfProduct());
-        saveToTransaction.setTotalPrice(sumPrice);
-        return transactionRepository.save(saveToTransaction);
+    public Transaction saveTransaction(Transaction body) {
+        int qtyProd = body.getQtyProd();
+        Stock stock = stockRepository.findByStockId(body.getStockId());
+        stock.setInStock(stock.getInStock()-qtyProd);
+        Customer customer = customerRepository.findByCustomerId(body.getCustomerId());
+        stockRepository.save(stock);
+        LiveStock liveStock = liveStockRepository.findByLiveId(body.getLiveId());
+        liveStock.setInStock(liveStock.getInStock()-qtyProd);
+        liveStockRepository.save(liveStock);
+        body.setFirstName(customer.getFirstName());
+        body.setLastName(customer.getLastName());
+        body.setAddress(customer.getAddress());
+        LocalDate date = LocalDate.now();
+        String referenceCode = "";
+        String str = date.toString();
+        String [] arrOfStr = str.split("-");
+        for (String a: arrOfStr){
+            referenceCode = referenceCode + a;
+        }
+        String random = randomAlphaNumeric(18);
+        referenceCode = referenceCode + random;
+        body.setReferenceCode(referenceCode);
+        transactionRepository.save(body);
+        return body;
     }
 
+    public static String randomAlphaNumeric(int count) {
+        StringBuilder builder = new StringBuilder();
+        while (count-- != 0) {
+            int character = (int)(Math.random()*ALPHA_NUMERIC_STRING.length());
+            builder.append(ALPHA_NUMERIC_STRING.charAt(character));
+        }
+        return builder.toString();
+    }
 
 
 }

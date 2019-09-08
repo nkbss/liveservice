@@ -15,9 +15,12 @@ import java.io.Serializable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CustomerPayReq implements Serializable {
 
+
     private String firstName;
     private String lastName;
     private String address;
     private Integer numberOfProduct;
+    private String liveId;
+
 
 }

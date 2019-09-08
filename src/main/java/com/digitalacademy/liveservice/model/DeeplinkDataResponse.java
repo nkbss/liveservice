@@ -18,5 +18,5 @@ import java.util.List;
 public class DeeplinkDataResponse implements Serializable {
 
     @NonNull
-    private List<Stock> stock;
+    private Stock stock;
 }

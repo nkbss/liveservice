@@ -17,6 +17,10 @@ public interface StockRepository extends JpaRepository<Stock, Integer> {
     @Query(value = getStockByStockId, nativeQuery = true)
     Stock getStockByStockId(String userId, int stockId);
 
-    List<Stock> findByStockId(int stockId);
+    public static final String getStock = "SELECT * From stock where stock_id = :stockId ";
+    @Query(value = getStock, nativeQuery = true)
+    Stock getStock(int stockId);
+
+    Stock findByStockId(int stockId);
 }
 
