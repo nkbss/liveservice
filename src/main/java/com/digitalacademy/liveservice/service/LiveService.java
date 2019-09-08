@@ -91,6 +91,14 @@ public class LiveService {
         return liveStocks;
     }
 
+    public LiveStock getLiveStockByStockId(String userId, String liveId,String stockId){
+        LiveStock liveStock = liveStockRepository.getLiveStock(userId,liveId,stockId);
+        if(liveStock.getCloseDeal() == 0){
+            return null;
+        }
+        return liveStock;
+    }
+
     public void closeDeal (String userId,String liveId){
         List<LiveStock> liveStocks = liveStockRepository.findAllLiveStock(userId,liveId);
         Live live = liveRepository.getLiveByLiveId(userId,liveId);
@@ -116,6 +124,7 @@ public class LiveService {
         response.setTotalPrice(totalPrice);
         return response;
     }
+
 
     // after click on deeplink
     public DeeplinkDataResponse getDeeplinkData(String liveId) {

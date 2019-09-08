@@ -89,6 +89,14 @@ public class LiveController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/getLiveStock")
+    public ResponseEntity<?> getLiveStockByStockId(@RequestParam String userId, @RequestParam String liveId, @RequestParam String stockId){
+        LiveStock liveStock = liveService.getLiveStockByStockId(userId,liveId,stockId);
+        ResponseModel response = new ResponseModel(new StatusModel(LiveResponse.SUCCESS.getCode()+"",
+                LiveResponse.SUCCESS.getMessage()),liveStock);
+        return ResponseEntity.ok(response);
+    }
+
     @DeleteMapping("/closeDeal")
     public ResponseEntity<?> closeDealByLiveId(@RequestParam String userId,@RequestParam String liveId){
         liveService.closeDeal(userId,liveId);
