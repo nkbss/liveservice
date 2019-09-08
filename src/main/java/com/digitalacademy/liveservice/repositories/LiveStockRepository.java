@@ -13,6 +13,8 @@ public interface LiveStockRepository extends JpaRepository<LiveStock,Integer> {
     @Query(value = allLiveStock, nativeQuery = true)
     List<LiveStock> findAllLiveStock(String userId,String liveId);
 
+    LiveStock findByLiveId(String liveId);
+
 //    public static final String closeDeal = "UPDATE livestock SET close_deal = :closeDeal , deep_link = :deepLink WHERE user_id= :userId AND live_id = :liveId";
 //    @Query(value = closeDeal,nativeQuery = true)
 //     closeDeals(int closeDeal,String deepLink,String userId,String liveId);

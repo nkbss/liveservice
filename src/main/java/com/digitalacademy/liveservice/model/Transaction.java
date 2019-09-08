@@ -14,6 +14,7 @@ import java.sql.Timestamp;
 @Data
 @Entity
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Table(name = "transaction")
 public class Transaction {
 
     @Id
@@ -32,12 +33,10 @@ public class Transaction {
     private String lastName;
 
     @NotNull
-    @Size(min = 1, message = "Please enter number of products")
     @Column(name="number_product")
     private int numberProd;
 
     @NotNull
-    @Size(min = 1, message = "Please enter total price")
     @Column(name="total_price")
     private int totalPrice;
 

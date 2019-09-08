@@ -1,14 +1,7 @@
 package com.digitalacademy.liveservice.service;
 
-import com.digitalacademy.liveservice.model.Customer;
-import com.digitalacademy.liveservice.model.Live;
-import com.digitalacademy.liveservice.model.LiveStock;
-import com.digitalacademy.liveservice.model.Stock;
-import com.digitalacademy.liveservice.repositories.CustomerRepository;
-import com.digitalacademy.liveservice.repositories.LiveRepository;
-import com.digitalacademy.liveservice.repositories.LiveStockRepository;
-import com.digitalacademy.liveservice.repositories.StockRepository;
-import org.json.JSONObject;
+import com.digitalacademy.liveservice.model.*;
+import com.digitalacademy.liveservice.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +14,10 @@ public class LiveService {
     private LiveRepository liveRepository;
     private LiveStockRepository liveStockRepository;
     private CustomerRepository customerRepository;
+
+    @Autowired
+    private TransactionRepository transactionRepository;
+
 
 
     @Autowired
@@ -109,6 +106,40 @@ public class LiveService {
             System.err.println(liveStockBody);
         }
 
+    }
+
+    public TransactionResponse getAllTransaction() {
+        TransactionResponse response = new TransactionResponse();
+        List<Transaction> transaction = transactionRepository.findAll();
+        Integer totalPrice = transactionRepository.getTotalPrice();
+        response.setTransactionList(transaction);
+        response.setTotalPrice(totalPrice);
+        return response;
+    }
+
+    // after click on deeplink
+    public DeeplinkDataResponse getDeeplinkData(String liveId) {
+        DeeplinkDataResponse deeplinkDataResponse = new DeeplinkDataResponse();
+        LiveStock liveStocksId = liveStockRepository.findByLiveId(liveId);
+        List<Stock> stock = stockRepository.findByStockId(liveStocksId.getStockId());
+        deeplinkDataResponse.setStock(stock);
+        return deeplinkDataResponse;
+    }
+
+    public Transaction saveTransaction(CustomerPayReq req, String liveId) {
+        LiveStock liveStocksId = liveStockRepository.findByLiveId(liveId);
+        List<Stock> stock = stockRepository.findByStockId(liveStocksId.getStockId());
+        Customer customerData = customerRepository.findById(1);
+
+        int sumPrice = stock.stream().filter(o -> o.getPrice() >= 0).mapToInt(Stock::getPrice).sum();
+
+        Transaction saveToTransaction = new Transaction();
+        saveToTransaction.setAddress(customerData.getAddress());
+        saveToTransaction.setFirstName(customerData.getFirstName());
+        saveToTransaction.setLastName(customerData.getLastName());
+        saveToTransaction.setNumberProd(req.getNumberOfProduct());
+        saveToTransaction.setTotalPrice(sumPrice);
+        return transactionRepository.save(saveToTransaction);
     }
 
 
