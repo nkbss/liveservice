@@ -2,7 +2,6 @@ package com.digitalacademy.liveservice.service;
 
 import com.digitalacademy.liveservice.model.*;
 import com.digitalacademy.liveservice.repositories.*;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -119,13 +118,28 @@ public class LiveService {
     }
 
     // after click on deeplink
-    public CustomerPayResponse getDeeplinkData(String liveId, int stockId) {
-        CustomerPayResponse customerPayResponse = new CustomerPayResponse();
-        LiveStock liveStocks = liveStockRepository.findByLiveId(liveId);
-        Stock stock = stockRepository.findByStockId(stockId);
-        customerPayResponse.setLiveStock(liveStocks);
-        customerPayResponse.setStock(stock);
-        return customerPayResponse;
+    public DeeplinkDataResponse getDeeplinkData(String liveId) {
+        DeeplinkDataResponse deeplinkDataResponse = new DeeplinkDataResponse();
+        LiveStock liveStocksId = liveStockRepository.findByLiveId(liveId);
+        List<Stock> stock = stockRepository.findByStockId(liveStocksId.getStockId());
+        deeplinkDataResponse.setStock(stock);
+        return deeplinkDataResponse;
+    }
+
+    public Transaction saveTransaction(CustomerPayReq req, String liveId) {
+        LiveStock liveStocksId = liveStockRepository.findByLiveId(liveId);
+        List<Stock> stock = stockRepository.findByStockId(liveStocksId.getStockId());
+        Customer customerData = customerRepository.findById(1);
+
+        int sumPrice = stock.stream().filter(o -> o.getPrice() >= 0).mapToInt(Stock::getPrice).sum();
+
+        Transaction saveToTransaction = new Transaction();
+        saveToTransaction.setAddress(customerData.getAddress());
+        saveToTransaction.setFirstName(customerData.getFirstName());
+        saveToTransaction.setLastName(customerData.getLastName());
+        saveToTransaction.setNumberProd(req.getNumberOfProduct());
+        saveToTransaction.setTotalPrice(sumPrice);
+        return transactionRepository.save(saveToTransaction);
     }
 
 

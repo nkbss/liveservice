@@ -10,4 +10,6 @@ public interface CustomerRepository extends JpaRepository<Customer,Integer> {
     public static final String getCustomer = "SELECT * From customer where customer_id= :customerId ";
     @Query(value = getCustomer, nativeQuery = true)
     List<Customer> getCustomer(String customerId);
+
+    Customer findById(int customerId);
 }

@@ -2,19 +2,15 @@ package com.digitalacademy.liveservice.controller;
 
 import com.digitalacademy.liveservice.constants.LiveResponse;
 import com.digitalacademy.liveservice.model.*;
-import com.digitalacademy.liveservice.repositories.TransactionRepository;
 import com.digitalacademy.liveservice.service.LiveService;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/live")
@@ -110,10 +106,18 @@ public class LiveController {
     }
 
     @GetMapping("/getDeeplinkData")
-    public ResponseEntity<?> deeplinkData(@RequestParam String liveId, @RequestParam int stockId) {
-        CustomerPayResponse customerPayResponse = liveService.getDeeplinkData(liveId, stockId);
+    public ResponseEntity<?> deeplinkData(@RequestParam String liveId) {
+        DeeplinkDataResponse deeplinkDataResponse = liveService.getDeeplinkData(liveId);
         ResponseModel response = new ResponseModel(new StatusModel(LiveResponse.SUCCESS.getCode()+"",
-                LiveResponse.SUCCESS.getMessage()), customerPayResponse);
+                LiveResponse.SUCCESS.getMessage()), deeplinkDataResponse);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/customerPay")
+    public ResponseEntity<?> customerPay(@RequestParam String liveId, @RequestBody CustomerPayReq customerPayReq) {
+        Transaction transaction = liveService.saveTransaction(customerPayReq, liveId);
+        ResponseModel response = new ResponseModel(new StatusModel(LiveResponse.SUCCESS.getCode()+"",
+                LiveResponse.SUCCESS.getMessage()));
         return ResponseEntity.ok(response);
     }
 
