@@ -74,8 +74,7 @@ public class LiveService {
 
     public LiveStock generateDeepLink (LiveStock liveStock, String userId){
         int stockRandom = new Random().nextInt(9999)+10000;
-        String deepLink = "SCB_LIVE/" + liveStock.getLiveId()+"/"+stockRandom;
-
+        String deepLink = "com.easyPay://transactions?" + "liveId="+liveStock.getLiveId()+"&stockId="+stockRandom;
         Stock stock = new Stock();
         stock.setStockId(stockRandom);
         stock.setUserId(userId);
