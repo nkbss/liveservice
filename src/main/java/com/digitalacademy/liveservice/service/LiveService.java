@@ -93,7 +93,7 @@ public class LiveService {
         stockRepository.save(stock);
         System.err.println(liveStock);
         liveStockRepository.save(liveStock);
-        System.err.println("generateDeepLink "+ deepLink +" Success " + "stockId = " + stockRandom);
+        System.err.println("generateDeepLink "+ deepLink +" Success " + "stockId = " + stockRandom +" Instock = "+ liveStock.getInStock());
         return liveStock;
     }
 
@@ -124,7 +124,6 @@ public class LiveService {
             liveStockBody.setCloseDeal(1);
             liveStockBody.setDeepLink("Expired");
             liveStockRepository.save(liveStockBody);
-            System.err.println(liveStockBody);
         }
 
     }
