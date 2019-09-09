@@ -74,7 +74,7 @@ public class LiveService {
         String liveRandom = "LIVE-" + random;
         body.setLiveId(liveRandom);
         liveRepository.save(body);
-        System.err.println("Create Live Success");
+        System.err.println("Create Live "+ random +" Success");
         return body;
     }
 
@@ -94,7 +94,7 @@ public class LiveService {
         stockRepository.save(stock);
         System.err.println(liveStock);
         liveStockRepository.save(liveStock);
-        System.err.println("generateDeepLink Success");
+        System.err.println("generateDeepLink "+ deepLink +" Success");
         return liveStock;
     }
 
