@@ -22,5 +22,5 @@ public class DeeplinkDataResponse implements Serializable {
     private Stock stock;
 
     @NotNull
-    private List<Customer> customer;
+    private Customer customer;
 }
