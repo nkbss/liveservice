@@ -113,9 +113,9 @@ public class LiveController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/getDeeplinkData")
-    public ResponseEntity<?> deeplinkData(@RequestParam String customerId, @RequestParam int stockId) {
-        DeeplinkDataResponse deeplinkDataResponse = liveService.getDeeplinkData(customerId,stockId);
+    @GetMapping("/getDeepLinkData")
+    public ResponseEntity<?> deepLinkData(@RequestParam String customerId, @RequestParam int stockId) {
+        DeeplinkDataResponse deeplinkDataResponse = liveService.getDeepLinkData(customerId,stockId);
         ResponseModel response = new ResponseModel(new StatusModel(LiveResponse.SUCCESS.getCode()+"",
                 LiveResponse.SUCCESS.getMessage()), deeplinkDataResponse);
         return ResponseEntity.ok(response);

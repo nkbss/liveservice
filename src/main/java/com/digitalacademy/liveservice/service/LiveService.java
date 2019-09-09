@@ -140,7 +140,7 @@ public class LiveService {
     }
 
 
-    public DeeplinkDataResponse getDeeplinkData(String customerId,int stockId) {
+    public DeeplinkDataResponse getDeepLinkData(String customerId,int stockId) {
         DeeplinkDataResponse deeplinkDataResponse = new DeeplinkDataResponse();
         Stock stock = stockRepository.findByStockId(stockId);
         Customer customer = customerRepository.findByCustomerId(customerId);
