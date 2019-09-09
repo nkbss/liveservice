@@ -31,6 +31,9 @@ public class Transaction {
     @Column(name="stock_name")
     private String stockName;
 
+    @Column(name="price")
+    private double price;
+
     @Column(name="live_id")
     private String liveId;
 

@@ -163,6 +163,7 @@ public class LiveService {
         body.setFirstName(customer.getFirstName());
         body.setLastName(customer.getLastName());
         body.setAddress(customer.getAddress());
+        body.setPrice(stock.getPrice());
         LocalDate date = LocalDate.now();
         String referenceCode = "";
         String str = date.toString();
@@ -175,7 +176,7 @@ public class LiveService {
         body.setReferenceCode(referenceCode);
         transactionRepository.save(body);
         this.getAllTransaction(body.getLiveId());
-        pusher.trigger("my-channel", "my-event",body);
+        pusher.trigger(body.getLiveId(), "newTransaction",body);
         return body;
     }
 
