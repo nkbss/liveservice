@@ -158,7 +158,7 @@ public class LiveService {
         stock.setInStock(stock.getInStock()-qtyProd);
         Customer customers = customerRepository.findByCustomerId(body.getCustomerId());
         stockRepository.save(stock);
-        LiveStock liveStock = liveStockRepository.findByLiveId(body.getLiveId());
+        LiveStock liveStock = liveStockRepository.findLiveByStockId(body.getLiveId(),body.getStockId());
         liveStock.setInStock(liveStock.getInStock()-qtyProd);
         liveStockRepository.save(liveStock);
         body.setStockName(stock.getStockName());
