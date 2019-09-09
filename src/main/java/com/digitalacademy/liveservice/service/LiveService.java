@@ -37,6 +37,7 @@ public class LiveService {
     public Stock createStock(Stock body,String userId){
         body.setUserId(userId);
         stockRepository.save(body);
+        System.err.println("createStock Success");
         return body;
     }
 
@@ -45,21 +46,25 @@ public class LiveService {
         String bankAccount = "xxx-xxx" + new Random().nextInt(999) + "-" + new Random().nextInt(9);
         body.setBankAccount(bankAccount);
         customerRepository.save(body);
+        System.err.println("createCustomer Success");
         return body;
     }
 
     public List<Customer> getCustomer(String customerId){
         List <Customer> customers = customerRepository.getCustomer(customerId);
+        System.err.println("getCustomer Success");
         return customers;
     }
 
     public List<Stock> getAllStockByUserId(String userId){
         List<Stock> stocks = stockRepository.findAllStockByUserId(userId);
+        System.err.println("getAllStockByUserId Success");
         return stocks;
     }
 
     public Stock getStockByStockId(String userId,int stockId){
         Stock stock = stockRepository.getStockByStockId(userId,stockId);
+        System.err.println("getStockByStockId Success");
         return stock;
     }
 
@@ -69,6 +74,7 @@ public class LiveService {
         String liveRandom = "LIVE-" + random;
         body.setLiveId(liveRandom);
         liveRepository.save(body);
+        System.err.println("Create Live Success");
         return body;
     }
 
@@ -88,11 +94,13 @@ public class LiveService {
         stockRepository.save(stock);
         System.err.println(liveStock);
         liveStockRepository.save(liveStock);
+        System.err.println("generateDeepLink Success");
         return liveStock;
     }
 
     public List<LiveStock> getAllLiveStockByLiveId(String userId,String liveId){
         List <LiveStock> liveStocks = liveStockRepository.findAllLiveStock(userId,liveId);
+        System.err.println("getAllLiveStockByLiveId Success");
         return liveStocks;
     }
 
@@ -101,6 +109,7 @@ public class LiveService {
         if(liveStock.getCloseDeal() == 0){
             return null;
         }
+        System.err.println("getLiveStockByStockId Success");
         return liveStock;
     }
 
@@ -122,16 +131,11 @@ public class LiveService {
     }
 
     public TransactionResponse getAllTransaction(String liveId) {
-//        Pusher pusher = new Pusher("857143", "c6ac9d5d09a6c242dfb8", "4476c85dac300ca54799");
-//        pusher.setCluster("ap1");
-//        pusher.setEncrypted(true);
-
         TransactionResponse response = new TransactionResponse();
         List<Transaction> transactions = transactionRepository.getTransactionByLiveId(liveId);
         Integer totalPrice = transactionRepository.getTotalPrice(liveId);
         response.setTransactionList(transactions);
         response.setTotalPrice(totalPrice);
-//        pusher.trigger("my-channel", "my-event",response);
         return response;
     }
 
@@ -142,6 +146,7 @@ public class LiveService {
         Customer customer = customerRepository.findByCustomerId(customerId);
         deeplinkDataResponse.setStock(stock);
         deeplinkDataResponse.setCustomer(customer);
+        System.err.println("Deeplink extract data success");
         return deeplinkDataResponse;
     }
 
@@ -174,6 +179,7 @@ public class LiveService {
         transactionRepository.save(body);
         this.getAllTransaction(body.getLiveId());
         pusher.trigger(body.getLiveId(), "newTransaction",body);
+        System.err.println("SaveTransaction Success");
         return body;
     }
 
