@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -74,7 +73,7 @@ public class LiveService {
         String liveRandom = "LIVE-" + random;
         body.setLiveId(liveRandom);
         liveRepository.save(body);
-        System.err.println("Create Live "+ random +" Success");
+        System.err.println("Create LIVE-"+ random +" Success");
         return body;
     }
 
@@ -94,7 +93,7 @@ public class LiveService {
         stockRepository.save(stock);
         System.err.println(liveStock);
         liveStockRepository.save(liveStock);
-        System.err.println("generateDeepLink "+ deepLink +" Success");
+        System.err.println("generateDeepLink "+ deepLink +" Success" + "stockId = " + stockRandom);
         return liveStock;
     }
 
