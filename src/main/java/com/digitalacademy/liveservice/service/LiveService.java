@@ -93,7 +93,7 @@ public class LiveService {
         stockRepository.save(stock);
         System.err.println(liveStock);
         liveStockRepository.save(liveStock);
-        System.err.println("generateDeepLink "+ deepLink +" Success" + "stockId = " + stockRandom);
+        System.err.println("generateDeepLink "+ deepLink +" Success " + "stockId = " + stockRandom);
         return liveStock;
     }
 
