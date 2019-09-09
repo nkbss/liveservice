@@ -79,7 +79,7 @@ public class LiveService {
         Stock stock = new Stock();
         stock.setStockId(stockRandom);
         stock.setUserId(userId);
-        stock.setName(liveStock.getStockName());
+        stock.setStockName(liveStock.getStockName());
         stock.setInStock(liveStock.getInStock());
         stock.setPrice(liveStock.getPrice());
         liveStock.setStockId(stockRandom);
@@ -137,12 +137,12 @@ public class LiveService {
     }
 
 
-    // after click on deeplink
-    public DeeplinkDataResponse getDeeplinkData(String liveId) {
+    public DeeplinkDataResponse getDeeplinkData(String customerId,int stockId) {
         DeeplinkDataResponse deeplinkDataResponse = new DeeplinkDataResponse();
-        LiveStock liveStocksId = liveStockRepository.findByLiveId(liveId);
-        Stock stock = stockRepository.findByStockId(liveStocksId.getStockId());
+        Stock stock = stockRepository.findByStockId(stockId);
+        Customer customer = customerRepository.findByCustomerId(customerId);
         deeplinkDataResponse.setStock(stock);
+        deeplinkDataResponse.setCustomer(customer);
         return deeplinkDataResponse;
     }
 
@@ -159,11 +159,10 @@ public class LiveService {
         LiveStock liveStock = liveStockRepository.findByLiveId(body.getLiveId());
         liveStock.setInStock(liveStock.getInStock()-qtyProd);
         liveStockRepository.save(liveStock);
-        body.setStockName(stock.getName());
+        body.setStockName(stock.getStockName());
         body.setFirstName(customer.getFirstName());
         body.setLastName(customer.getLastName());
         body.setAddress(customer.getAddress());
-        body.setPrice(stock.getPrice());
         LocalDate date = LocalDate.now();
         String referenceCode = "";
         String str = date.toString();

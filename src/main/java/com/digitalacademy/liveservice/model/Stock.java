@@ -29,9 +29,9 @@ public class Stock {
     private String userId;
 
     @NotNull
-    @Column(name="name")
+    @Column(name="stock_name")
     @Size(min = 1, max = 100, message = "Please type your name")
-    private String name;
+    private String stockName;
 
     @Column(name="price")
     private double price;
