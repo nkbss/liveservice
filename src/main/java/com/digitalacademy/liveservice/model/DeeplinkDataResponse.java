@@ -18,9 +18,9 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DeeplinkDataResponse implements Serializable {
 
-    @NonNull
+
     private Stock stock;
 
-    @NotNull
+
     private Customer customer;
 }

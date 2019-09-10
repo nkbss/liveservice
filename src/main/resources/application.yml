@@ -9,7 +9,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+#      ddl-auto: create
 
   datasource:
     url: jdbc:mysql://localhost:3306/db_liveservice

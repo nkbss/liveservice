@@ -3,11 +3,19 @@ package com.digitalacademy.liveservice.service;
 import com.digitalacademy.liveservice.model.*;
 import com.digitalacademy.liveservice.repositories.*;
 import com.pusher.rest.Pusher;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 @Service
@@ -138,15 +146,50 @@ public class LiveService {
     }
 
 
-    public DeeplinkDataResponse getDeepLinkData(String customerId,int stockId) {
+//    public DeeplinkDataResponse getDeepLinkData(String customerId,int stockId) {
+//        DeeplinkDataResponse deeplinkDataResponse = new DeeplinkDataResponse();
+//        Stock stock = stockRepository.findByStockId(stockId);
+//        Customer customer = customerRepository.findByCustomerId(customerId);
+//        deeplinkDataResponse.setStock(stock);
+//        deeplinkDataResponse.setCustomer(customer);
+//        System.err.println("Deeplink extract data success");
+//        return deeplinkDataResponse;
+//    }
+
+    public DeeplinkDataResponse getDeepLinkData (String resourceOwnerId,String accessToken,int stockId) throws JSONException {
+        String url = "https://api.partners.scb/partners/sandbox/v1/customers/profile";
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("authorization","Bearer "+accessToken);
+        headers.set("resourceOwnerId",resourceOwnerId);
+        headers.set("requestUId","99100361-23d2-433d-8c21-4b6469918713");
+        headers.set("accept-language","EN");
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpEntity request = new HttpEntity(headers);
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET,  request, String.class);
+
+        JSONObject jsonObject = new JSONObject(response.getBody());
+        Customer customer = new Customer();
         DeeplinkDataResponse deeplinkDataResponse = new DeeplinkDataResponse();
+
+        JSONObject add = jsonObject.getJSONObject("data").getJSONObject("profile").getJSONObject("address");
+        String address = "บ้านเลขที่ "+add.get("thaiAddressNumber").toString()+" หมู่ "+add.get("thaiAddressMoo").toString()+" ถนน "+
+                add.get("thaiAddressThanon").toString()+" อำเภอ/เขต "+ add.get("thaiAddressAmphur").toString()
+                +" จังหวัด "+add.get("thaiAddressProvince").toString()+
+                " รหัสไปรษณีย์ " +add.get("zipCode").toString() ;
+        String bankAccount = "xxx-xxx" + new Random().nextInt(999) + "-" + new Random().nextInt(9);
+        customer.setCustomerId(resourceOwnerId);
+        customer.setBankAccount(bankAccount);
+        customer.setFirstName(jsonObject.getJSONObject("data").getJSONObject("profile").get("thaiFirstName").toString());
+        customer.setLastName(jsonObject.getJSONObject("data").getJSONObject("profile").get("thaiLastName").toString());
+        customer.setAddress(address);
         Stock stock = stockRepository.findByStockId(stockId);
-        Customer customer = customerRepository.findByCustomerId(customerId);
+        System.err.println(customer);
         deeplinkDataResponse.setStock(stock);
         deeplinkDataResponse.setCustomer(customer);
-        System.err.println("Deeplink extract data success");
         return deeplinkDataResponse;
     }
+
 
 
     public Transaction saveTransaction(Transaction body) {

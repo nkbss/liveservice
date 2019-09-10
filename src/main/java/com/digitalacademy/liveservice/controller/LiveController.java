@@ -113,19 +113,27 @@ public class LiveController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/getDeepLinkData")
-    public ResponseEntity<?> deepLinkData(@RequestParam String customerId, @RequestParam int stockId) {
-        DeeplinkDataResponse deeplinkDataResponse = liveService.getDeepLinkData(customerId,stockId);
-        ResponseModel response = new ResponseModel(new StatusModel(LiveResponse.SUCCESS.getCode()+"",
-                LiveResponse.SUCCESS.getMessage()), deeplinkDataResponse);
-        return ResponseEntity.ok(response);
-    }
+//    @GetMapping("/getDeepLinkData")
+//    public ResponseEntity<?> deepLinkData(@RequestParam String customerId, @RequestParam int stockId) {
+//        DeeplinkDataResponse deeplinkDataResponse = liveService.getDeepLinkData(customerId,stockId);
+//        ResponseModel response = new ResponseModel(new StatusModel(LiveResponse.SUCCESS.getCode()+"",
+//                LiveResponse.SUCCESS.getMessage()), deeplinkDataResponse);
+//        return ResponseEntity.ok(response);
+//    }
 
     @PostMapping("/easyPay")
     public ResponseEntity<?> easyPay(@RequestBody  Transaction body) {
         Transaction transaction = liveService.saveTransaction(body);
         ResponseModel response = new ResponseModel(new StatusModel(LiveResponse.SUCCESS.getCode()+"",
                 LiveResponse.SUCCESS.getMessage()),transaction);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/getDeepLinkData")
+    public ResponseEntity<?> getDeepLinkData(@RequestParam String resourceOwnerId,@RequestParam String accessToken, @RequestParam int stockId) throws JSONException {
+        DeeplinkDataResponse deeplinkDataResponse  = liveService.getDeepLinkData(resourceOwnerId,accessToken,stockId);
+        ResponseModel response = new ResponseModel(new StatusModel(LiveResponse.SUCCESS.getCode()+"",
+                LiveResponse.SUCCESS.getMessage()),deeplinkDataResponse);
         return ResponseEntity.ok(response);
     }
 
