@@ -173,15 +173,15 @@ public class LiveService {
         DeeplinkDataResponse deeplinkDataResponse = new DeeplinkDataResponse();
 
         JSONObject add = jsonObject.getJSONObject("data").getJSONObject("profile").getJSONObject("address");
-        String address = "บ้านเลขที่ "+add.get("thaiAddressNumber").toString()+" หมู่ "+add.get("thaiAddressMoo").toString()+" ถนน "+
-                add.get("thaiAddressThanon").toString()+" อำเภอ/เขต "+ add.get("thaiAddressAmphur").toString()
-                +" จังหวัด "+add.get("thaiAddressProvince").toString()+
-                " รหัสไปรษณีย์ " +add.get("zipCode").toString() ;
+        String address = "Address number "+add.get("engAddressNumber").toString()+" Moo "+add.get("engAddressMoo").toString()+" Thanon "+
+                add.get("engAddressThanon").toString()+" Aumphur "+ add.get("engAddressAmphur").toString()
+                +" Province "+add.get("engAddressProvince").toString()+
+                " Zipcode " +add.get("zipCode").toString() ;
         String bankAccount = "xxx-xxx" + new Random().nextInt(999) + "-" + new Random().nextInt(9);
         customer.setCustomerId(resourceOwnerId);
         customer.setBankAccount(bankAccount);
-        customer.setFirstName(jsonObject.getJSONObject("data").getJSONObject("profile").get("thaiFirstName").toString());
-        customer.setLastName(jsonObject.getJSONObject("data").getJSONObject("profile").get("thaiLastName").toString());
+        customer.setFirstName(jsonObject.getJSONObject("data").getJSONObject("profile").get("engFirstName").toString());
+        customer.setLastName(jsonObject.getJSONObject("data").getJSONObject("profile").get("engLastName").toString());
         customer.setAddress(address);
         Stock stock = stockRepository.findByStockId(stockId);
         System.err.println(customer);
