@@ -25,4 +25,8 @@ public interface LiveStockRepository extends JpaRepository<LiveStock,Integer> {
 //    public static final String closeDeal = "UPDATE livestock SET close_deal = :closeDeal , deep_link = :deepLink WHERE user_id= :userId AND live_id = :liveId";
 //    @Query(value = closeDeal,nativeQuery = true)
 //     closeDeals(int closeDeal,String deepLink,String userId,String liveId);
+
+    public static final String findCloseDeal = "SELECT livestock.close_deal From livestock where stock_id = :stockId";
+    @Query(value = findCloseDeal, nativeQuery = true)
+    int getCloseDeal(int stockId);
 }
